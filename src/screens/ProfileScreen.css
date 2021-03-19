@@ -48,6 +48,8 @@
 .profileScreen__plans {
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
+    height: 50vh;
 }
 
 .profileScreen__signOut {
@@ -58,4 +60,43 @@
     outline: none;
     border-radius: 5px;
     cursor: pointer;
+}
+
+.netflixPlan {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    opacity: 1;
+    transition: all 300ms ease-in-out;
+}
+
+.netflixPlan > h4 {
+    font-size: 1rem;
+    font-family: sans-serif;
+    font-weight: 600;
+}
+
+.netflixPlan:hover {
+    transition: all 300ms ease-in-out;
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+.netflixPlan__button {
+    width: 8em;
+    height: 2.5em;
+    color: white;
+    background-color: #E50914;
+    border: none;
+    outline: none;
+    font-family: sans-serif;
+    font-weight: 600;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.clicked {
+    background-color: gray;
+    color: white;
+    width: 10em;
 }
