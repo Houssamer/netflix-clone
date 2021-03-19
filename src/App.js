@@ -1,23 +1,54 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
-import Navbar from './Navbar'
-import Banner from './Banner'
-import Row from '../../netflix-clone-nv/src/Row'
-import requests from './requests'
+import Homescreen from './screens/Homescreen';
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from 'react-router-dom'
+import LoginScreen from './screens/LoginScreen';
+import { auth } from './firebase';
+import { selectUser, login, logout} from './features/userSlice'
+import ProfileScreen from './screens/ProfileScreen';
 
 function App() {
-  return (
+
+  const user = useSelector(selectUser);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((userAuth) => {
+      if (userAuth) {
+        dispatch(login({
+          uid: userAuth.uid,
+          email: userAuth.email
+        }))
+
+      } else {
+        dispatch(logout());
+      }
+    })
+
+    return () => {unsubscribe()};
+  }, [dispatch])
+
+  return ( 
     <div className="App">
-      <Navbar />
-      <Banner fetchUrl={requests.fetchNetflixOriginals}/>
-      <Row title="Netflix Originals" fetchUrl={requests.fetchNetflixOriginals} isRowLarge/>
-      <Row title="Trending Now" fetchUrl={requests.fetchTrending} />
-      <Row title="Top rated" fetchUrl={requests.fetchTopRated} />
-      <Row title="Action Movies" fetchUrl={requests.fetchActionMovies} />
-      <Row title="Comedy Movies" fetchUrl={requests.fetchComedyMovies} />
-      <Row title="Horror Movies" fetchUrl={requests.fetchHorrorMovies} />
-      <Row title="Romance Movies" fetchUrl={requests.fetchRomanceMovies} />
-      <Row title="Documentary Movies" fetchUrl={requests.fetchDocumentaries} />
+      <Router>
+        {
+          !user ? (<LoginScreen />) : (
+            <Switch>
+              <Route path="/profile">
+                <ProfileScreen />
+              </Route>
+              <Route path="/">
+                <Homescreen />
+              </Route>
+            </Switch>
+          )
+        }
+    </Router>
     </div>
   );
 }
